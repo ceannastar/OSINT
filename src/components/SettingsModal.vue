@@ -127,17 +127,6 @@
         </template>
 
         <!-- Footer -->
-        <div class="border-t border-app mt-4 pt-4 flex items-center justify-between">
-          <span class="text-muted text-xs font-mono">OpenOSINT {{ version }}</span>
-          <a
-            href="https://github.com/OpenOSINT/OpenOSINT"
-            target="_blank"
-            rel="noopener"
-            class="text-secondary hover:text-primary text-xs transition-colors"
-          >
-            GitHub
-          </a>
-        </div>
       </div>
     </div>
   </Teleport>

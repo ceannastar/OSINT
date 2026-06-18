@@ -1,18 +1,11 @@
 <template>
   <button
     @click="$emit('click')"
-    class="suggestion-btn"
+    class="suggestion-btn glass-card"
   >
-    <svg 
-      width="14" 
-      height="14" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      stroke-width="1.5"
-      v-html="suggestion.svgIcon"
-    ></svg>
-    <span>{{ suggestion.title }}</span>
+    <span class="suggestion-icon" v-html="suggestion.svgIcon"></span>
+    <span class="suggestion-text">{{ suggestion.title }}</span>
+    <span class="suggestion-arrow">→</span>
   </button>
 </template>
 
@@ -28,25 +21,59 @@ defineEmits(['click'])
 .suggestion-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
   color: var(--text-secondary);
-  background: transparent;
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 .suggestion-btn:hover {
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
   color: var(--text-primary);
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 255, 200, 0.1);
 }
 
-.suggestion-btn svg {
-  flex-shrink: 0;
+.suggestion-btn:hover .suggestion-arrow {
+  transform: translateX(2px);
+  opacity: 1;
+}
+
+.suggestion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 14px;
   height: 14px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.suggestion-btn:hover .suggestion-icon {
+  opacity: 1;
+}
+
+.suggestion-icon :deep(svg) {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+}
+
+.suggestion-text {
+  font-weight: 500;
+}
+
+.suggestion-arrow {
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: var(--accent-primary);
+  font-size: 0.7rem;
 }
 </style>

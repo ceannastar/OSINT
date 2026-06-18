@@ -1,5 +1,28 @@
 <template>
-  <div class="app-container">
+  <div 
+    class="app-container"
+    @mousemove="handleMouseMove"
+    @mouseleave="handleMouseLeave"
+  >
+    <!-- Фоновые эффекты -->
+    <div class="bg-effects">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="grid-pattern"></div>
+      
+      <!-- Следующий за курсором круг -->
+      <div 
+        class="cursor-glow"
+        :style="{
+          left: cursorX + 'px',
+          top: cursorY + 'px',
+          opacity: cursorVisible ? 1 : 0,
+          transform: `translate(-50%, -50%) scale(${cursorScale})`
+        }"
+      ></div>
+    </div>
+
     <TopBar
       :version="version"
       :ai-backend="aiBackend"
@@ -50,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import TopBar from './components/TopBar.vue'
 import SettingsModal from './components/SettingsModal.vue'
 import ChatArea from './components/ChatArea.vue'
@@ -73,49 +96,43 @@ const ollamaTestResult = ref('')
 const ollamaTestOk = ref(false)
 const suggestions = SUGGESTIONS
 
-const testOllama = async () => {
-  ollamaTestResult.value = 'Testing...'
-  ollamaTestOk.value = false
-  try {
-    const r = await fetch(settings.ollamaHost.replace(/\/$/, '') + '/api/tags', {
-      signal: AbortSignal.timeout(3000),
-    })
-    if (r.ok) {
-      ollamaTestOk.value = true
-      ollamaTestResult.value = 'Connected'
-    } else {
-      ollamaTestResult.value = `HTTP ${r.status}`
-    }
-  } catch (e) {
-    ollamaTestResult.value = e.message
-  }
+// Cursor glow
+const cursorX = ref(-100)
+const cursorY = ref(-100)
+const cursorVisible = ref(false)
+const cursorScale = ref(1)
+let animationFrame = null
+let targetX = -100
+let targetY = -100
+let currentX = -100
+let currentY = -100
+
+const handleMouseMove = (event) => {
+  const rect = event.currentTarget.getBoundingClientRect()
+  targetX = event.clientX - rect.left
+  targetY = event.clientY - rect.top
+  cursorVisible.value = true
+  
+  // Эффект пульсации при движении
+  cursorScale.value = 1.2
+  setTimeout(() => {
+    cursorScale.value = 1
+  }, 100)
 }
 
-const saveOllamaSettings = async () => {
-  ollamaTestResult.value = 'Saving...'
-  ollamaTestOk.value = false
+const handleMouseLeave = () => {
+  cursorVisible.value = true
+}
+
+// Плавное следование за курсором
+const animateCursor = () => {
+  currentX += (targetX - currentX) * 0.1
+  currentY += (targetY - currentY) * 0.1
   
-  const body = {
-    OLLAMA_HOST: settings.ollamaHost.trim(),
-    OLLAMA_MODEL: settings.ollamaModel.trim(),
-  }
+  cursorX.value = currentX
+  cursorY.value = currentY
   
-  try {
-    const r = await fetch('/api/setup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    if (!r.ok) throw new Error('Save failed')
-    ollamaTestOk.value = true
-    ollamaTestResult.value = 'Saved'
-    await fetchHealth()
-    setTimeout(() => {
-      if (ollamaTestResult.value === 'Saved') ollamaTestResult.value = ''
-    }, 3000)
-  } catch (e) {
-    ollamaTestResult.value = e.message || 'Failed to save.'
-  }
+  animationFrame = requestAnimationFrame(animateCursor)
 }
 
 onMounted(() => {
@@ -123,6 +140,13 @@ onMounted(() => {
   loadSettings()
   fetchHealth()
   fetchSponsors()
+  animateCursor()
+})
+
+onUnmounted(() => {
+  if (animationFrame) {
+    cancelAnimationFrame(animationFrame)
+  }
 })
 </script>
 
@@ -132,16 +156,127 @@ onMounted(() => {
   flex-direction: column;
   height: 100vh;
   height: 100dvh;
-  background-color: var(--bg);
-  color: var(--text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.875rem;
+  background: var(--bg-primary);
+  position: relative;
   overflow: hidden;
+}
+
+/* Фоновые эффекты */
+.bg-effects {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: float 8s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--accent-primary);
+  top: -100px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 300px;
+  height: 300px;
+  background: var(--accent-secondary);
+  bottom: -50px;
+  left: -50px;
+  animation-delay: -3s;
+}
+
+.orb-3 {
+  width: 200px;
+  height: 200px;
+  background: var(--accent-blue);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: -5s;
+  opacity: 0.08;
+}
+
+/* Следующий за курсором круг */
+.cursor-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 200, 0.15) 0%,
+    rgba(124, 58, 237, 0.08) 30%,
+    rgba(59, 130, 246, 0.04) 60%,
+    transparent 80%
+  );
+  transition: opacity 0.3s ease, transform 0.1s ease;
+  will-change: transform;
+  z-index: 0;
+}
+
+/* Дополнительный маленький круг для более точного следования */
+.cursor-glow::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 200, 0.3) 0%,
+    rgba(0, 255, 200, 0) 70%
+  );
+  transform: translate(-50%, -50%);
+}
+
+.grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 .chat-wrapper {
   flex: 1;
   overflow: hidden;
   min-height: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.app-container * {
+}
+
+.app-container button,
+.app-container input,
+.app-container textarea,
+.app-container a {
+  cursor: pointer;
+}
+
+.app-container textarea {
+  cursor: text;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(10px, -20px) scale(1.05); }
+  66% { transform: translate(-10px, 10px) scale(0.95); }
 }
 </style>

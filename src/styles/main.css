@@ -3,47 +3,147 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --surface-dark: #1c2128;
-  --border: #30363d;
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --text-muted: #484f58;
-  --accent: #3fb950;
-  --accent-blue: #58a6ff;
-  --red: #f85149;
-  --yellow: #d29922;
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-surface: #1a1a2e;
+  --bg-glass: rgba(26, 26, 46, 0.7);
+  --bg-card: rgba(26, 26, 46, 0.5);
+  
+  --border-color: rgba(100, 100, 255, 0.15);
+  --border-glow: rgba(0, 255, 200, 0.2);
+  
+  --text-primary: #e8e8f0;
+  --text-secondary: #a0a0b8;
+  --text-muted: #6a6a80;
+  
+  --accent-primary: #00ffc8;
+  --accent-secondary: #7c3aed;
+  --accent-blue: #3b82f6;
+  --accent-pink: #ec4899;
+  --accent-orange: #f59e0b;
+  
+  --shadow-glow: 0 0 30px rgba(0, 255, 200, 0.1);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  
+  --gradient-main: linear-gradient(135deg, #00ffc8 0%, #7c3aed 50%, #3b82f6 100%);
+  --gradient-glow: linear-gradient(135deg, rgba(0, 255, 200, 0.1), rgba(124, 58, 237, 0.1));
 }
 
 .light {
-  --bg: #ffffff;
-  --surface: #f6f8fa;
-  --surface-dark: #eaeef2;
-  --border: #d0d7de;
-  --text-primary: #1f2328;
-  --text-secondary: #636c76;
-  --text-muted: #818b98;
-  --accent: #1a7f37;
-  --accent-blue: #0969da;
-  --red: #d1242f;
-  --yellow: #9a6700;
+  --bg-primary: #f0f0f8;
+  --bg-secondary: #e8e8f0;
+  --bg-surface: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --bg-card: rgba(255, 255, 255, 0.6);
+  
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-glow: rgba(0, 200, 150, 0.2);
+  
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a60;
+  --text-muted: #8a8aa0;
+  
+  --accent-primary: #00c8a0;
+  --accent-secondary: #6d28d9;
+  --accent-blue: #2563eb;
+  --accent-pink: #db2777;
+  --accent-orange: #d97706;
+  
+  --shadow-glow: 0 0 30px rgba(0, 200, 160, 0.1);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html, body, #app {
   height: 100%;
-  margin: 0;
-  padding: 0;
   overflow: hidden;
 }
 
 body {
-  background-color: var(--bg);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
 }
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+}
+
+/* Анимации */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.c-spin { animation: spin 1s linear infinite; }
+.c-fadein { animation: fadein 0.2s ease; }
+.c-blink { animation: blink 1s step-end infinite; }
+.c-float { animation: float 3s ease-in-out infinite; }
+.c-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 200, 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* Glassmorphism */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+}
+
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+}
+
+/* Градиентные тексты */
+.gradient-text {
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 
 #app {
   height: 100vh;
