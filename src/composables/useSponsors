@@ -1,0 +1,21 @@
+import { ref } from 'vue'
+
+export function useSponsors() {
+  const featuredSponsors = ref([])
+
+  const fetchSponsors = async () => {
+    try {
+      const r = await fetch('/api/sponsors')
+      if (!r.ok) return
+      const d = await r.json()
+      if (d.status === 'ok') {
+        featuredSponsors.value = (d.sponsors || []).filter(s => s.tier === 'featured')
+      }
+    } catch {}
+  }
+
+  return {
+    featuredSponsors,
+    fetchSponsors
+  }
+}
