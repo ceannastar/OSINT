@@ -5,7 +5,6 @@
         <div class="logo-icon">✦</div>
         <span class="logo-text gradient-text">BFElite</span>
       </div>
-      <span class="version-badge">{{ version }}</span>
     </div>
 
     <div class="top-bar-center">
@@ -13,7 +12,7 @@
         <span class="status-dot" :class="{ connected: aiBackend === 'ollama' }"></span>
         <button @click="$emit('open-settings')" class="status-button">
           <span v-if="aiBackend === 'ollama'">
-            <span class="status-label">Model</span>
+            <span class="status-label">Model </span>
             <span class="status-value">{{ settings.ollamaModel }}</span>
           </span>
           <span v-else class="status-value">Not configured</span>
@@ -65,7 +64,6 @@
 
 <script setup>
 defineProps({
-  version: { type: String, required: true },
   aiBackend: { type: String, required: true },
   settings: { type: Object, required: true },
   isLight: { type: Boolean, required: true },

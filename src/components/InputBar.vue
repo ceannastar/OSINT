@@ -3,31 +3,34 @@
     <div class="input-container">
       <div class="input-wrapper glass-card">
         <div class="input-prefix">
-          <span class="prompt-symbol">❯</span>
+          <span class="prompt-symbol">⟩</span>
         </div>
         <textarea
           ref="textareaRef"
           v-model="model"
           :disabled="isStreaming"
-          placeholder="Type your investigation query..."
+          placeholder="Enter your query..."
           rows="1"
           class="input-textarea"
           @keydown.enter.exact.prevent="$emit('send')"
           @input="autoResize"
         ></textarea>
-        <button
-          @click="$emit('send')"
-          :disabled="isStreaming || !model.trim()"
-          class="send-btn"
-        >
-          <svg v-if="!isStreaming" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="19" x2="12" y2="5"/>
-            <polyline points="5 12 12 5 19 12"/>
-          </svg>
-          <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="c-spin">
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-          </svg>
-        </button>
+        <div class="input-suffix">
+          <span class="char-count" v-if="model.length > 0">{{ model.length }}</span>
+          <button
+            @click="$emit('send')"
+            :disabled="isStreaming || !model.trim()"
+            class="send-btn"
+          >
+            <svg v-if="!isStreaming" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="19" x2="12" y2="5"/>
+              <polyline points="5 12 12 5 19 12"/>
+            </svg>
+            <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="c-spin">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -85,7 +88,7 @@ nextTick(() => {
 .input-wrapper {
   display: flex;
   align-items: flex-end;
-  gap: 0.75rem;
+  gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.75rem;
   background: var(--bg-glass);
@@ -96,7 +99,7 @@ nextTick(() => {
 
 .input-wrapper:focus-within {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 30px rgba(0, 255, 200, 0.05), inset 0 0 30px rgba(0, 255, 200, 0.02);
+  box-shadow: 0 0 30px rgba(0, 255, 200, 0.05);
 }
 
 .input-prefix {
@@ -108,7 +111,8 @@ nextTick(() => {
   color: var(--accent-primary);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.875rem;
-  opacity: 0.6;
+  opacity: 0.5;
+  font-weight: 700;
 }
 
 .input-textarea {
@@ -138,6 +142,20 @@ nextTick(() => {
   outline: none;
 }
 
+.input-suffix {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.char-count {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  opacity: 0.5;
+}
+
 .send-btn {
   flex-shrink: 0;
   width: 32px;
@@ -151,11 +169,10 @@ nextTick(() => {
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
-  margin-bottom: 0.125rem;
 }
 
 .send-btn:hover:not(:disabled) {
-  transform: scale(1.05);
+  transform: scale(1.05) rotate(-5deg);
   box-shadow: 0 0 30px rgba(0, 255, 200, 0.3);
 }
 
