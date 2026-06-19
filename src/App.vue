@@ -50,9 +50,7 @@
       @delete-chat="deleteChat"
     />
 
-    <!-- Основной контент -->
     <div v-if="!showError" class="main-content">
-      <!-- SettingsModal теперь использует компонент из папки -->
       <SettingsModal
         :show="showSettings"
         :settings="settings"
@@ -71,6 +69,7 @@
         @toggle-advanced-keys="showAdvancedKeys = !showAdvancedKeys"
         @toggle-show-key="(key) => showKeys[key] = !showKeys[key]"
         @save-ollama-settings="saveOllamaSettings"
+        @select-model="selectModel"
       />
 
       <div class="chat-wrapper">
@@ -173,6 +172,35 @@ const handleMouseMove = (event) => {
   setTimeout(() => {
     cursorScale.value = 1
   }, 100)
+}
+
+const selectModel = async (model) => {
+  try {
+    const response = await fetch(`${backendUrl.value}/api/model/select`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model })
+    })
+    
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.detail || 'Ошибка смены модели')
+    }
+    
+    const data = await response.json()
+    // Обновляем настройки
+    settings.ollamaModel = data.current_model
+    // Показываем уведомление об успехе
+    console.log(`Модель изменена на ${data.current_model}`)
+    
+    // Обновляем статус Ollama
+    await testOllama()
+    
+    return data
+  } catch (error) {
+    console.error('Ошибка смены модели:', error)
+    throw error
+  }
 }
 
 const handleMouseLeave = () => {

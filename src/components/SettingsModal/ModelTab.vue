@@ -51,17 +51,17 @@
 
     <div class="settings-group">
       <div class="form-group">
-        <label class="form-label">Название модели</label>
-        <div class="input-wrapper glass-card">
+        <label class="form-label">Текущая модель</label>
+        <div class="input-wrapper glass-card" style="display: flex; gap: 0.5rem;">
           <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/>
             <circle cx="12" cy="10" r="3"/>
           </svg>
-          <div class="select-wrapper">
+          <div class="select-wrapper" style="flex: 1;">
             <select
-              v-model="settings.ollamaModel"
+              v-model="selectedModel"
               class="form-select"
-              :disabled="!ollamaTestOk || availableModels.length === 0"
+              :disabled="!ollamaTestOk || availableModels.length === 0 || isSaving"
             >
               <option v-if="availableModels.length === 0" value="" disabled>
                 {{ ollamaTestOk ? 'Нет доступных моделей' : 'Подключитесь к Ollama' }}
@@ -125,26 +125,37 @@
           {{ isTesting ? 'Проверка...' : 'Проверить подключение' }}
         </button>
         <button
-          @click="$emit('save-ollama-settings')"
+          @click="applyModel"
           class="btn-primary"
+          :disabled="!ollamaTestOk || !selectedModel || selectedModel === currentModel || isSaving"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-            <polyline points="17 21 17 13 7 13 7 21"/>
-            <polyline points="7 3 7 8 15 8"/>
+          <svg v-if="!isSaving" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+            <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
           </svg>
-          Сохранить настройки
+          <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="c-spin">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+          </svg>
+          {{ isSaving ? 'Применение...' : 'Применить модель' }}
         </button>
+      </div>
+
+      <!-- Статус применения модели -->
+      <div v-if="applyStatus" class="apply-status glass-card" :class="applyStatusOk ? 'status-connected' : 'status-error'">
+        <span class="status-dot" :class="{ connected: applyStatusOk, error: !applyStatusOk }"></span>
+        <span class="status-text">{{ applyStatus }}</span>
       </div>
 
       <div v-if="ollamaTestOk" class="connection-details glass-card">
         <div class="detail-row">
-          <span class="detail-label">Сервер</span>
-          <span class="detail-value">{{ settings.ollamaHost }}</span>
+          <span class="detail-label">Текущая модель</span>
+          <span class="detail-value" style="color: var(--accent-primary); font-weight: 600;">
+            {{ settings.ollamaModel || 'Не выбрана' }}
+          </span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Модель</span>
-          <span class="detail-value">{{ settings.ollamaModel || 'Не выбрана' }}</span>
+          <span class="detail-label">Сервер</span>
+          <span class="detail-value">{{ settings.ollamaHost }}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Статус</span>
@@ -165,15 +176,50 @@
 </template>
 
 <script setup>
-defineProps({
+import { ref, watch } from 'vue'
+
+const props = defineProps({
   settings: { type: Object, required: true },
   ollamaTestResult: { type: String, required: true },
   ollamaTestOk: { type: Boolean, required: true },
   availableModels: { type: Array, required: true },
-  isTesting: { type: Boolean, required: true }
+  isTesting: { type: Boolean, required: true },
+  isSaving: { type: Boolean, required: true }
 })
 
-defineEmits(['test-ollama', 'save-ollama-settings'])
+const emit = defineEmits(['test-ollama', 'save-ollama-settings', 'select-model'])
+
+const selectedModel = ref(props.settings.ollamaModel || '')
+const currentModel = ref(props.settings.ollamaModel || '')
+const applyStatus = ref('')
+const applyStatusOk = ref(false)
+
+watch(() => props.settings.ollamaModel, (newVal) => {
+  if (newVal) {
+    selectedModel.value = newVal
+    currentModel.value = newVal
+  }
+})
+
+const applyModel = async () => {
+  if (!selectedModel.value || selectedModel.value === currentModel.value) return
+  
+  applyStatus.value = 'Применение модели...'
+  applyStatusOk.value = false
+  
+  try {
+    await emit('select-model', selectedModel.value)
+    currentModel.value = selectedModel.value
+    applyStatus.value = `Модель изменена на ${selectedModel.value}`
+    applyStatusOk.value = true
+    setTimeout(() => {
+      applyStatus.value = ''
+    }, 3000)
+  } catch (error) {
+    applyStatus.value = `Ошибка: ${error.message || 'Не удалось применить модель'}`
+    applyStatusOk.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -341,7 +387,6 @@ defineEmits(['test-ollama', 'save-ollama-settings'])
   color: var(--text-muted);
 }
 
-/* Стили для выпадающего списка */
 .select-wrapper {
   flex: 1;
   position: relative;
@@ -374,12 +419,6 @@ defineEmits(['test-ollama', 'save-ollama-settings'])
 .form-select option {
   background: var(--bg-secondary);
   color: var(--text-primary);
-  padding: 8px 12px;
-}
-
-.form-select option:checked {
-  background: var(--accent-primary);
-  color: var(--bg-primary);
 }
 
 .select-arrow {
@@ -397,11 +436,6 @@ defineEmits(['test-ollama', 'save-ollama-settings'])
 .select-wrapper:focus-within .select-arrow {
   transform: translateY(-50%) rotate(180deg);
   stroke: var(--accent-primary);
-}
-
-/* Стили для select при фокусе */
-.select-wrapper:focus-within {
-  border-color: var(--accent-primary);
 }
 
 .form-hint {
@@ -451,6 +485,11 @@ defineEmits(['test-ollama', 'save-ollama-settings'])
   box-shadow: 0 4px 20px rgba(0, 255, 200, 0.3);
 }
 
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .btn-secondary {
   background: var(--bg-glass);
   color: var(--text-secondary);
@@ -465,6 +504,15 @@ defineEmits(['test-ollama', 'save-ollama-settings'])
 .btn-secondary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.apply-status {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .connection-details {

@@ -42,8 +42,10 @@
             :ollama-test-ok="ollamaTestOk"
             :available-models="availableModels"
             :is-testing="isTesting"
+            :is-saving="isSaving"
             @test-ollama="handleTestConnection"
             @save-ollama-settings="handleSaveSettings"
+            @select-model="handleSelectModel"
           />
 
           <ApiKeysTab
@@ -87,7 +89,8 @@ const props = defineProps({
   showAdvancedKeys: { type: Boolean, required: true },
   ollamaTestResult: { type: String, required: true },
   ollamaTestOk: { type: Boolean, required: true },
-  availableModels: { type: Array, required: true }
+  availableModels: { type: Array, required: true },
+  isSaving: { type: Boolean, required: true }
 })
 
 const emit = defineEmits([
@@ -96,16 +99,30 @@ const emit = defineEmits([
   'test-ollama',
   'toggle-advanced-keys',
   'toggle-show-key',
-  'save-ollama-settings'
+  'save-ollama-settings',
+  'select-model'
 ])
 
 const activeTab = ref('model')
 const isTesting = ref(false)
+const isSaving = ref(false)
 
 const tabs = [
-  { id: 'model', label: 'Модель' },
-  { id: 'api', label: 'API Ключи' },
-  { id: 'about', label: 'Об инструменте' }
+  { 
+    id: 'model', 
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>', 
+    label: 'Модель' 
+  },
+  { 
+    id: 'api', 
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>', 
+    label: 'API Ключи' 
+  },
+  { 
+    id: 'about', 
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>', 
+    label: 'Об инструменте' 
+  }
 ]
 
 const configuredKeys = computed(() => {
@@ -119,7 +136,18 @@ const handleTestConnection = async () => {
 }
 
 const handleSaveSettings = async () => {
+  isSaving.value = true
   await emit('save-ollama-settings')
+  isSaving.value = false
+}
+
+const handleSelectModel = async (model) => {
+  isSaving.value = true
+  try {
+    await emit('select-model', model)
+  } finally {
+    isSaving.value = false
+  }
 }
 </script>
 

@@ -75,14 +75,17 @@ defineEmits(['switch'])
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .tab-icon :deep(svg) {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   stroke: currentColor;
+  fill: none;
+  display: block;
 }
 
 .tab-label {

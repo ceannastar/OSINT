@@ -25,7 +25,6 @@ export function useChat(settings) {
     }
   }
 
-  // Создание нового чата
   const createChat = async (name = null) => {
     try {
       const r = await fetch(`${BACKEND_URL}/api/chats`, {
@@ -44,7 +43,6 @@ export function useChat(settings) {
     return null
   }
 
-  // Загрузка чата (ТОЛЬКО ЗАГРУЗКА, без отправки сообщений!)
   const loadChat = async (chatId) => {
     try {
       const r = await fetch(`${BACKEND_URL}/api/chats/${chatId}`)
@@ -52,7 +50,6 @@ export function useChat(settings) {
         const data = await r.json()
         currentChatId.value = chatId
         
-        // Преобразуем сообщения из бэкенда в формат для фронтенда
         const loadedMessages = []
         for (const msg of data.messages || []) {
           if (msg.role === 'user') {
@@ -85,7 +82,6 @@ export function useChat(settings) {
     return false
   }
 
-  // Переименование чата
   const renameChat = async (chatId, name) => {
     try {
       const r = await fetch(`${BACKEND_URL}/api/chats/${chatId}`, {
@@ -103,7 +99,6 @@ export function useChat(settings) {
     return false
   }
 
-  // Удаление чата
   const deleteChat = async (chatId) => {
     try {
       const r = await fetch(`${BACKEND_URL}/api/chats/${chatId}`, {
@@ -151,7 +146,6 @@ export function useChat(settings) {
     const text = input.value.trim()
     if (!text || isStreaming.value) return
 
-    // Если нет активного чата, создаём новый
     if (!currentChatId.value) {
       const newId = await createChat()
       if (newId) {

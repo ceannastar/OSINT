@@ -23,15 +23,12 @@ export function useOllama(settings) {
       
       if (response.ok) {
         const data = await response.json()
-        console.log('Ollama ответ:', data) // Для отладки
         
-        // Извлекаем модели из правильного пути: data.ollama.models
         const ollamaData = data.ollama || data
         const models = ollamaData.models || []
         
         availableModels.value = models
         
-        // Сохраняем детали моделей из model_details
         const details = ollamaData.model_details || {}
         modelDetails.value = details
         
@@ -52,7 +49,6 @@ export function useOllama(settings) {
     }
   }
 
-  // Получение детальной информации о модели через /api/health
   const fetchModelDetails = async () => {
     try {
       const backendUrl = 'http://localhost:8080'
@@ -63,11 +59,9 @@ export function useOllama(settings) {
       if (response.ok) {
         const data = await response.json()
         if (data.ollama && data.ollama.reachable) {
-          // Обновляем список моделей из /api/health
           const models = data.ollama.models || []
           availableModels.value = models
           
-          // Сохраняем детали моделей
           modelDetails.value = data.ollama.model_details || {}
           
           ollamaTestOk.value = true
