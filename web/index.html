@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFElite</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+            </svg>
+            <div class="logo-title">BFElite</div>
+            <div class="logo-sub">OSINT Платформа</div>
+        </div>
+
+        <div class="status-card">
+            <div class="status-header">
+                <div class="status-label">
+                    <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4l3 3"/>
+                    </svg>
+                    Статус Ollama
+                </div>
+                <div id="statusBadge" class="status-badge">
+                    <span id="statusDot" class="status-dot"></span>
+                    <span id="statusText">Загрузка...</span>
+                </div>
+            </div>
+            <div class="status-info">
+                <div class="info-row">
+                    <span class="info-label">Статус</span>
+                    <span id="statusValue" class="info-value">Загрузка...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Версия</span>
+                    <span id="versionValue" class="info-value">Загрузка...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Хост</span>
+                    <span id="hostValue" class="info-value" style="font-family: 'Courier New', monospace; font-size: 13px;">Загрузка...</span>
+                </div>
+            </div>
+            
+            <div class="models-section">
+                <div class="models-title">
+                    <svg class="models-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="2" width="20" height="20" rx="2.18"/>
+                        <line x1="8" y1="2" x2="8" y2="22"/>
+                        <line x1="16" y1="2" x2="16" y2="22"/>
+                        <line x1="2" y1="8" x2="22" y2="8"/>
+                        <line x1="2" y1="16" x2="22" y2="16"/>
+                    </svg>
+                    Доступные модели (<span id="modelsCount">0</span>)
+                </div>
+                <div id="modelsList">Загрузка...</div>
+            </div>
+        </div>
+
+        <div id="currentModelSection" class="current-model-section" style="display: none;">
+            <div class="current-model-title">
+                <svg class="target-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="6"/>
+                    <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Текущая модель
+            </div>
+            <div id="currentModelName" class="current-model-name">Загрузка...</div>
+            <div class="model-details-grid">
+                <div class="model-detail-item">
+                    <span class="model-detail-label">
+                        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Семейство
+                    </span>
+                    <span id="modelFamily" class="model-detail-value">Загрузка...</span>
+                </div>
+                <div class="model-detail-item">
+                    <span class="model-detail-label">
+                        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="2" width="20" height="20" rx="2.18"/>
+                            <line x1="8" y1="2" x2="8" y2="22"/>
+                            <line x1="16" y1="2" x2="16" y2="22"/>
+                            <line x1="2" y1="8" x2="22" y2="8"/>
+                            <line x1="2" y1="16" x2="22" y2="16"/>
+                        </svg>
+                        Формат
+                    </span>
+                    <span id="modelFormat" class="model-detail-value">Загрузка...</span>
+                </div>
+                <div class="model-detail-item">
+                    <span class="model-detail-label">
+                        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Параметры
+                    </span>
+                    <span id="modelParameters" class="model-detail-value">Загрузка...</span>
+                </div>
+                <div class="model-detail-item">
+                    <span class="model-detail-label">
+                        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2v4M12 22v-4M4 12H2M6 12H4M20 12h-2M22 12h-2M19.07 4.93l-2.83 2.83M4.93 19.07l2.83-2.83M19.07 19.07l-2.83-2.83M4.93 4.93l2.83 2.83"/>
+                        </svg>
+                        Квантование
+                    </span>
+                    <span id="modelQuantization" class="model-detail-value">Загрузка...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="endpoint-info">
+            <span>POST </span><code>/api/chat</code>
+            <span style="color: #6a6a80; margin-left: 8px;">— только {"message"}</span>
+        </div>
+
+        <div class="footer">
+            <a href="https://github.com/ceannastar/OSINT" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                <span>GitHub</span>
+            </a>
+            <span class="footer-divider">·</span>
+            <span>BFElite OSINT Платформа</span>
+            <span class="footer-divider">·</span>
+        </div>
+    </div>
+
+    <script>
+        async function loadStatus() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                if (data.status === 'ok' && data.ollama) {
+                    updateUI(data.ollama);
+                } else {
+                    showError('Не удалось загрузить статус');
+                }
+            } catch (error) {
+                showError('Ошибка подключения: ' + error.message);
+            }
+        }
+
+        function updateUI(status) {
+            const reachable = status.reachable;
+            const models = status.models || [];
+            const currentModel = status.current_model || 'Нет';
+            const version = status.version;
+            const error = status.error;
+            const host = status.host;
+            const modelDetails = status.model_details || {};
+
+            const statusBadge = document.getElementById('statusBadge');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const statusValue = document.getElementById('statusValue');
+
+            if (reachable) {
+                statusBadge.style.background = '#4CAF5022';
+                statusBadge.style.color = '#4CAF50';
+                statusBadge.style.border = '1px solid #4CAF5044';
+                statusDot.style.background = '#4CAF50';
+                statusDot.style.animation = 'pulse 1.5s ease-in-out infinite';
+                statusText.textContent = 'Подключено';
+                statusValue.textContent = 'Подключено';
+                statusValue.style.color = '#4CAF50';
+            } else {
+                statusBadge.style.background = '#f4433622';
+                statusBadge.style.color = '#f44336';
+                statusBadge.style.border = '1px solid #f4433644';
+                statusDot.style.background = '#f44336';
+                statusDot.style.animation = 'none';
+                statusText.textContent = 'Не подключено';
+                statusValue.textContent = 'Не подключено';
+                statusValue.style.color = '#f44336';
+            }
+
+            document.getElementById('versionValue').textContent = version ? 'v' + version : 'неизвестно';
+
+            document.getElementById('hostValue').textContent = host || 'localhost:11434';
+
+            document.getElementById('modelsCount').textContent = models.length;
+            const modelsList = document.getElementById('modelsList');
+            
+            if (models.length > 0) {
+                modelsList.innerHTML = models.map(m => {
+                    const isCurrent = m === currentModel;
+                    return `<div class="model-item ${isCurrent ? 'model-current' : ''}">
+                        <span class="model-icon">${isCurrent ? '★ ' : '  '}</span> ${m}
+                    </div>`;
+                }).join('');
+            } else {
+                modelsList.innerHTML = `
+                    <div class="no-models">Нет доступных моделей. Сначала загрузите модель:</div>
+                    <div class="no-models" style="font-family: 'Courier New', monospace; font-size: 12px; color: #00ffc8;">ollama pull llama3.2</div>
+                `;
+            }
+
+            const currentModelSection = document.getElementById('currentModelSection');
+            if (reachable && models.length > 0 && currentModel !== 'Нет') {
+                currentModelSection.style.display = 'block';
+                document.getElementById('currentModelName').textContent = currentModel;
+
+                const details = modelDetails[currentModel] || {};
+                const detailInfo = details.details || {};
+                
+                document.getElementById('modelFamily').textContent = detailInfo.family || 'неизвестно';
+                document.getElementById('modelFormat').textContent = detailInfo.format || 'неизвестно';
+                document.getElementById('modelParameters').textContent = detailInfo.parameter_size || 'неизвестно';
+                document.getElementById('modelQuantization').textContent = detailInfo.quantization_level || 'неизвестно';
+            } else {
+                currentModelSection.style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('statusText').textContent = 'Ошибка';
+            document.getElementById('statusValue').textContent = message;
+            document.getElementById('statusValue').style.color = '#f44336';
+            document.getElementById('modelsList').innerHTML = '<div class="no-models">' + message + '</div>';
+        }
+
+        loadStatus();
+
+        setInterval(loadStatus, 5000);
+    </script>
+</body>
+</html>
