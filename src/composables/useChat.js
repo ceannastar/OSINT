@@ -1,4 +1,4 @@
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import { scrollToBottom } from '../utils/helpers'
 
 export function useChat(settings) {
@@ -6,12 +6,123 @@ export function useChat(settings) {
   const chatHistory = ref([])
   const input = ref('')
   const isStreaming = ref(false)
-  const tools = ref([])
   const version = ref('2.11.0')
   const aiBackend = ref('ollama')
+  const currentChatId = ref(null)
+  const chats = ref([])
 
-  // Базовый URL для бэкенда
   const BACKEND_URL = 'http://localhost:8080'
+
+  const fetchChats = async () => {
+    try {
+      const r = await fetch(`${BACKEND_URL}/api/chats`)
+      if (r.ok) {
+        const data = await r.json()
+        chats.value = data.chats || []
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки чатов:', error)
+    }
+  }
+
+  // Создание нового чата
+  const createChat = async (name = null) => {
+    try {
+      const r = await fetch(`${BACKEND_URL}/api/chats`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      })
+      if (r.ok) {
+        const data = await r.json()
+        await fetchChats()
+        return data.id
+      }
+    } catch (error) {
+      console.error('Ошибка создания чата:', error)
+    }
+    return null
+  }
+
+  // Загрузка чата (ТОЛЬКО ЗАГРУЗКА, без отправки сообщений!)
+  const loadChat = async (chatId) => {
+    try {
+      const r = await fetch(`${BACKEND_URL}/api/chats/${chatId}`)
+      if (r.ok) {
+        const data = await r.json()
+        currentChatId.value = chatId
+        
+        // Преобразуем сообщения из бэкенда в формат для фронтенда
+        const loadedMessages = []
+        for (const msg of data.messages || []) {
+          if (msg.role === 'user') {
+            loadedMessages.push({
+              role: 'user',
+              content: msg.content,
+              time: msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
+              parts: msg.parts || []
+            })
+          } else if (msg.role === 'assistant') {
+            // Если есть parts, используем их, иначе создаём текстовый блок
+            const parts = msg.parts && msg.parts.length > 0 
+              ? msg.parts 
+              : [{ type: 'text', content: msg.content, streaming: false }]
+            
+            loadedMessages.push({
+              role: 'assistant',
+              parts: parts
+            })
+          }
+        }
+        
+        messages.value = loadedMessages
+        chatHistory.value = data.messages || []
+        return true
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки чата:', error)
+    }
+    return false
+  }
+
+  // Переименование чата
+  const renameChat = async (chatId, name) => {
+    try {
+      const r = await fetch(`${BACKEND_URL}/api/chats/${chatId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      })
+      if (r.ok) {
+        await fetchChats()
+        return true
+      }
+    } catch (error) {
+      console.error('Ошибка переименования чата:', error)
+    }
+    return false
+  }
+
+  // Удаление чата
+  const deleteChat = async (chatId) => {
+    try {
+      const r = await fetch(`${BACKEND_URL}/api/chats/${chatId}`, {
+        method: 'DELETE'
+      })
+      if (r.ok) {
+        await fetchChats()
+        if (currentChatId.value === chatId) {
+          currentChatId.value = null
+          messages.value = []
+          chatHistory.value = []
+        }
+        return true
+      }
+    } catch (error) {
+      console.error('Ошибка удаления чата:', error)
+    }
+    return false
+  }
 
   const fetchHealth = async () => {
     try {
@@ -20,6 +131,7 @@ export function useChat(settings) {
       const d = await r.json()
       version.value = d.version || version.value
       if (d.ollama_host) settings.ollamaHost = d.ollama_host
+      fetchChats()
     } catch {}
   }
 
@@ -39,6 +151,18 @@ export function useChat(settings) {
     const text = input.value.trim()
     if (!text || isStreaming.value) return
 
+    // Если нет активного чата, создаём новый
+    if (!currentChatId.value) {
+      const newId = await createChat()
+      if (newId) {
+        currentChatId.value = newId
+        await fetchChats()
+      } else {
+        pushError('Не удалось создать чат')
+        return
+      }
+    }
+
     input.value = ''
 
     const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -50,9 +174,9 @@ export function useChat(settings) {
     isStreaming.value = true
     scrollToBottom(document.getElementById('chat-area'))
 
-    // Отправляем запрос через бэкенд
     const payload = {
-      message: text
+      message: text,
+      chat_id: currentChatId.value
     }
 
     let fullText = ''
@@ -163,6 +287,9 @@ export function useChat(settings) {
         chatHistory.value.push({ role: 'assistant', content: summary })
       }
 
+      // Обновляем список чатов
+      await fetchChats()
+
     } catch (err) {
       messages.value[msgIdx].parts.push({ type: 'text', content: `Ошибка соединения: ${err.message}`, streaming: false })
     }
@@ -174,6 +301,7 @@ export function useChat(settings) {
   const clearConversation = () => {
     messages.value = []
     chatHistory.value = []
+    currentChatId.value = null
   }
 
   return {
@@ -181,13 +309,19 @@ export function useChat(settings) {
     chatHistory,
     input,
     isStreaming,
-    tools,
     version,
     aiBackend,
+    currentChatId,
+    chats,
     fetchHealth,
     sendSuggestion,
     sendMessage,
     clearConversation,
-    pushError
+    pushError,
+    fetchChats,
+    createChat,
+    loadChat,
+    renameChat,
+    deleteChat
   }
 }

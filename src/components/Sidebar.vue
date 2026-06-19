@@ -75,6 +75,44 @@
 
     <div class="sidebar-divider"></div>
 
+    <!-- Список чатов -->
+    <div class="chats-section">
+      <div class="chats-header">
+        <span class="chats-title">Чаты</span>
+        <span class="chats-count">{{ chats.length }}</span>
+      </div>
+      <div class="chats-list">
+        <button
+          v-for="chat in chats"
+          :key="chat.id"
+          class="chat-item"
+          :class="{ active: chat.id === currentChatId }"
+          @click="$emit('select-chat', chat.id)"
+        >
+          <svg class="chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span class="chat-name">{{ chat.name }}</span>
+          <span class="chat-messages-count">{{ chat.messages_count }}</span>
+          <button
+            class="chat-delete"
+            @click.stop="$emit('delete-chat', chat.id)"
+            title="Удалить чат"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </button>
+        <div v-if="chats.length === 0" class="no-chats">
+          <span>Нет чатов</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
     <!-- Информация о сессии -->
     <div class="session-info">
       <div class="info-item">
@@ -121,10 +159,19 @@ defineProps({
   isLight: { type: Boolean, required: true },
   messagesCount: { type: Number, required: true },
   ollamaTestResult: { type: String, required: true },
-  ollamaTestOk: { type: Boolean, required: true }
+  ollamaTestOk: { type: Boolean, required: true },
+  chats: { type: Array, required: true },
+  currentChatId: { type: String, default: null }
 })
 
-defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-conversation'])
+defineEmits([
+  'toggle-theme',
+  'open-settings',
+  'clear-conversation',
+  'new-conversation',
+  'select-chat',
+  'delete-chat'
+])
 </script>
 
 <style scoped>
@@ -329,6 +376,125 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
   margin: 0.75rem 0;
 }
 
+/* Список чатов */
+.chats-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-bottom: 0.75rem;
+}
+
+.chats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.chats-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chats-count {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.chats-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.4rem;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+
+.chat-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.chat-item.active {
+  background: rgba(0, 255, 200, 0.08);
+  color: var(--accent-primary);
+  border: 1px solid rgba(0, 255, 200, 0.15);
+}
+
+.chat-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
+.chat-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-messages-count {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.chat-delete {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.chat-item:hover .chat-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-delete:hover {
+  color: var(--red);
+  background: rgba(248, 81, 73, 0.1);
+}
+
+.no-chats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
 /* Информация о сессии */
 .session-info {
   display: flex;
@@ -407,5 +573,23 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
+}
+
+/* Скроллбар для списка чатов */
+.chats-list::-webkit-scrollbar {
+  width: 3px;
+}
+
+.chats-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chats-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 2px;
+}
+
+.chats-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 </style>
