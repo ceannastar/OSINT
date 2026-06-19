@@ -9,7 +9,8 @@ from tool_runner import OLLAMA_TOOLS, run_tool
 async def stream_ollama(
     messages: list[dict],
     ollama_host: str,
-    ollama_model: str
+    ollama_model: str,
+    enable_tools: bool = True  # <-- Добавляем флаг
 ) -> AsyncIterator[dict]:
     host = ollama_host.rstrip("/")
     msgs = list(messages)
@@ -26,9 +27,11 @@ async def stream_ollama(
             payload = {
                 "model": ollama_model,
                 "messages": msgs,
-                "tools": OLLAMA_TOOLS,
                 "stream": False,
             }
+            
+            if enable_tools:
+                payload["tools"] = OLLAMA_TOOLS
             
             async with httpx.AsyncClient(timeout=120) as client:
                 response = await client.post(f"{host}/api/chat", json=payload)
@@ -36,7 +39,7 @@ async def stream_ollama(
             if response.status_code != 200:
                 yield {
                     "type": "error",
-                    "message": f"Ollama вернул HTTP {response.status_code}: {response.text[:200]}"
+                    "message": f"Ollama returned HTTP {response.status_code}: {response.text[:200]}"
                 }
                 return
             
@@ -45,11 +48,11 @@ async def stream_ollama(
         except httpx.ConnectError:
             yield {
                 "type": "error",
-                "message": f"Не могу подключиться по адресу {host}. Убедитесь, что Ollama запущен."
+                "message": f"Cannot connect to Ollama at {host}. Make sure Ollama is running."
             }
             return
         except Exception as exc:
-            yield {"type": "error", "message": f"Запрос к Ollama завершился ошибкой: {exc}"}
+            yield {"type": "error", "message": f"Ollama request failed: {exc}"}
             return
         
         msg = data.get("message", {})
@@ -59,7 +62,7 @@ async def stream_ollama(
         if content:
             yield {"type": "text", "content": content}
         
-        if not tool_calls:
+        if not tool_calls or not enable_tools:
             break
         
         tool_results = []

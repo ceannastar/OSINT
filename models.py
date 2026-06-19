@@ -17,7 +17,7 @@ class ChatRename(BaseModel):
 
 
 class ChatMessage(BaseModel):
-    role: str  # user, assistant
+    role: str
     content: str
     timestamp: datetime = datetime.now()
     parts: Optional[List[dict]] = None

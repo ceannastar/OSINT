@@ -1,0 +1,62 @@
+{
+  "id": "754ed12e",
+  "name": "Чат 754ed12e",
+  "created_at": "2026-06-20T00:49:30.360759",
+  "updated_at": "2026-06-20T00:55:17.217139",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Привет",
+      "timestamp": "2026-06-20T00:49:32.181274",
+      "parts": []
+    },
+    {
+      "role": "assistant",
+      "content": "Привет! Как дела?",
+      "timestamp": "2026-06-20T00:49:35.854577",
+      "parts": [
+        {
+          "type": "text",
+          "content": "Привет! Как дела?",
+          "streaming": false
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": "Необходимо найти инофрмацию на никнейм: @Holikc",
+      "timestamp": "2026-06-20T00:49:54.667375",
+      "parts": []
+    },
+    {
+      "role": "assistant",
+      "content": "## Результаты поиска пользователя @Holikc\n\nProfiles found for user 'Holikc':\n\nhttps://www.chess.com/member/Holikc\nhttps://www.deviantart.com/Holikc\nhttps://forums.digitalspy.com/profile/Holikc\nhttps://discord.com\nhttps://www.github.com/Holikc\nhttps://forum.kvinneguiden.no\nhttps://community.native-instruments.com/profile/Holikc\nhttps://www.nitrotype.com/racer/Holikc\nhttps://ourdjtalk.com/members?username=Holikc\nhttps://Holikc.rajce.idnes.cz/\nhttps://robertsspaceindustries.com/citizens/Holikc\nhttps://www.tiktok.com/@Holikc\nhttps://t.me/Holikc\nhttps://trello.com/Holikc\nhttps://account.venmo.com/u/Holikc\nhttps://en.wikipedia.org/wiki/Special:CentralAuth/Holikc?uselang=qqx\nhttps://www.youtube.com/@Holikc\nhttps://mastodon.cloud/@Holikc\nhttps://www.pinterest.com/Holikc/\nhttps://Holikc.tumblr.com/\n\nTotal found: 20 platforms",
+      "timestamp": "2026-06-20T00:52:04.663479",
+      "parts": [
+        {
+          "type": "text",
+          "content": "## Результаты поиска пользователя @Holikc\n\nProfiles found for user 'Holikc':\n\nhttps://www.chess.com/member/Holikc\nhttps://www.deviantart.com/Holikc\nhttps://forums.digitalspy.com/profile/Holikc\nhttps://discord.com\nhttps://www.github.com/Holikc\nhttps://forum.kvinneguiden.no\nhttps://community.native-instruments.com/profile/Holikc\nhttps://www.nitrotype.com/racer/Holikc\nhttps://ourdjtalk.com/members?username=Holikc\nhttps://Holikc.rajce.idnes.cz/\nhttps://robertsspaceindustries.com/citizens/Holikc\nhttps://www.tiktok.com/@Holikc\nhttps://t.me/Holikc\nhttps://trello.com/Holikc\nhttps://account.venmo.com/u/Holikc\nhttps://en.wikipedia.org/wiki/Special:CentralAuth/Holikc?uselang=qqx\nhttps://www.youtube.com/@Holikc\nhttps://mastodon.cloud/@Holikc\nhttps://www.pinterest.com/Holikc/\nhttps://Holikc.tumblr.com/\n\nTotal found: 20 platforms",
+          "streaming": false
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": "@zstarling",
+      "timestamp": "2026-06-20T00:53:09.144746",
+      "parts": []
+    },
+    {
+      "role": "assistant",
+      "content": "## Результаты поиска пользователя @zstarling\n\nProfiles found for user 'zstarling':\n\nhttps://www.chess.com/member/zstarling\nhttps://www.codecademy.com/profiles/zstarling\nhttps://forums.digitalspy.com/profile/zstarling\nhttps://www.github.com/zstarling\nhttps://forum.kvinneguiden.no\nhttps://community.native-instruments.com/profile/zstarling\nhttps://www.nitrotype.com/racer/zstarling\nhttps://ourdjtalk.com/members?username=zstarling\nhttps://pokemonshowdown.com/users/zstarling\nhttps://zstarling.rajce.idnes.cz/\nhttps://scratch.mit.edu/users/zstarling\nhttps://robertsspaceindustries.com/citizens/zstarling\nhttps://www.tiktok.com/@zstarling\nhttps://t.me/zstarling\nhttps://account.venmo.com/u/zstarling\nhttps://en.wikipedia.org/wiki/Special:CentralAuth/zstarling?uselang=qqx\nhttps://www.youtube.com/@zstarling\nhttps://mastodon.cloud/@zstarling\nhttps://www.pinterest.com/zstarling/\nhttps://zstarling.tumblr.com/\n\nTotal found: 20 platforms",
+      "timestamp": "2026-06-20T00:55:17.217043",
+      "parts": [
+        {
+          "type": "text",
+          "content": "## Результаты поиска пользователя @zstarling\n\nProfiles found for user 'zstarling':\n\nhttps://www.chess.com/member/zstarling\nhttps://www.codecademy.com/profiles/zstarling\nhttps://forums.digitalspy.com/profile/zstarling\nhttps://www.github.com/zstarling\nhttps://forum.kvinneguiden.no\nhttps://community.native-instruments.com/profile/zstarling\nhttps://www.nitrotype.com/racer/zstarling\nhttps://ourdjtalk.com/members?username=zstarling\nhttps://pokemonshowdown.com/users/zstarling\nhttps://zstarling.rajce.idnes.cz/\nhttps://scratch.mit.edu/users/zstarling\nhttps://robertsspaceindustries.com/citizens/zstarling\nhttps://www.tiktok.com/@zstarling\nhttps://t.me/zstarling\nhttps://account.venmo.com/u/zstarling\nhttps://en.wikipedia.org/wiki/Special:CentralAuth/zstarling?uselang=qqx\nhttps://www.youtube.com/@zstarling\nhttps://mastodon.cloud/@zstarling\nhttps://www.pinterest.com/zstarling/\nhttps://zstarling.tumblr.com/\n\nTotal found: 20 platforms",
+          "streaming": false
+        }
+      ]
+    }
+  ]
+}

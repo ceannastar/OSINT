@@ -3,13 +3,11 @@ from config import WEB_DIR
 
 
 def get_status_page() -> str:
-#Возвращает HTML страницу из файла index.html
     index_path = WEB_DIR / "index.html"
     
     if index_path.exists():
         return index_path.read_text(encoding="utf-8")
     
-    # Fallback если файл не найден
     return """<!DOCTYPE html>
 <html lang="ru">
 <head>
