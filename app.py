@@ -1,7 +1,7 @@
 import json
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from config import WEB_DIR, DEFAULT_OLLAMA_HOST
@@ -27,18 +27,39 @@ def create_app() -> FastAPI:
     
     @app.get("/api/health")
     async def health(ollama_host: str = DEFAULT_OLLAMA_HOST):
-        status = await check_ollama_status(ollama_host)
-        return {
-            "status": "ok",
-            "ollama": status
-        }
+        """
+        Проверка статуса подключения к Ollama.
+        
+        Возвращает:
+        - 200 OK: Ollama доступен
+        - 500 Internal Server Error: Ollama недоступен
+        """
+        status_data = await check_ollama_status(ollama_host)
+        
+        if status_data.get("reachable", False):
+            return JSONResponse(
+                status_code=status.HTTP_200_OK,
+                content={
+                    "status": "ok",
+                    "ollama": status_data
+                }
+            )
+        else:
+            return JSONResponse(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                content={
+                    "status": "error",
+                    "message": "Ollama is not reachable",
+                    "ollama": status_data
+                }
+            )
     
     @app.post("/api/chat")
     async def chat(req: ChatRequest):
-        status = await check_ollama_status(DEFAULT_OLLAMA_HOST)
+        status_data = await check_ollama_status(DEFAULT_OLLAMA_HOST)
         
-        if not status["reachable"]:
-            error_msg = status.get("error", "Ollama is not reachable")
+        if not status_data["reachable"]:
+            error_msg = status_data.get("error", "Ollama is not reachable")
             async def generate_error():
                 yield f"data: {json.dumps({'type': 'error', 'message': f'Cannot connect to Ollama: {error_msg}'})}\n\n"
                 yield f"data: {json.dumps({'type': 'done'})}\n\n"
@@ -51,7 +72,7 @@ def create_app() -> FastAPI:
                 },
             )
         
-        models = status.get("models", [])
+        models = status_data.get("models", [])
         if not models:
             async def generate_no_model():
                 yield f"data: {json.dumps({'type': 'error', 'message': 'No models available. Pull a model first: ollama pull llama3.2'})}\n\n"
