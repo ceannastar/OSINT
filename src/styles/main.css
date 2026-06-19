@@ -136,14 +136,12 @@ body {
   box-shadow: var(--shadow-card);
 }
 
-/* Градиентные тексты */
 .gradient-text {
   background: var(--gradient-main);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
 
 #app {
   height: 100vh;

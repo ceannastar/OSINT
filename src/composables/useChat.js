@@ -10,21 +10,16 @@ export function useChat(settings) {
   const version = ref('2.11.0')
   const aiBackend = ref('ollama')
 
-  const fetchTools = async () => {
-    try {
-      const r = await fetch('/api/tools')
-      if (r.ok) tools.value = await r.json()
-    } catch {}
-  }
+  // Базовый URL для бэкенда
+  const BACKEND_URL = 'http://localhost:8080'
 
   const fetchHealth = async () => {
     try {
-      const r = await fetch('/api/health')
+      const r = await fetch(`${BACKEND_URL}/api/health`)
       if (!r.ok) return
       const d = await r.json()
       version.value = d.version || version.value
       if (d.ollama_host) settings.ollamaHost = d.ollama_host
-      fetchTools()
     } catch {}
   }
 
@@ -44,20 +39,6 @@ export function useChat(settings) {
     const text = input.value.trim()
     if (!text || isStreaming.value) return
 
-    // Check if Ollama is reachable
-    try {
-      const testResp = await fetch(settings.ollamaHost.replace(/\/$/, '') + '/api/tags', {
-        signal: AbortSignal.timeout(3000),
-      })
-      if (!testResp.ok) {
-        pushError(`Ollama is not reachable at ${settings.ollamaHost}. Please make sure Ollama is running and the host URL is correct.`)
-        return
-      }
-    } catch {
-      pushError(`Ollama is not reachable at ${settings.ollamaHost}. Please make sure Ollama is running and the host URL is correct.`)
-      return
-    }
-
     input.value = ''
 
     const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -69,17 +50,14 @@ export function useChat(settings) {
     isStreaming.value = true
     scrollToBottom(document.getElementById('chat-area'))
 
+    // Отправляем запрос через бэкенд
     const payload = {
-      message: text,
-      history: chatHistory.value.slice(0, -1),
-      model: 'ollama',
-      ollama_model: settings.ollamaModel,
-      ollama_host: settings.ollamaHost,
+      message: text
     }
 
     let fullText = ''
     try {
-      const resp = await fetch('/api/chat', {
+      const resp = await fetch(`${BACKEND_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -88,13 +66,13 @@ export function useChat(settings) {
       if (!resp.ok) {
         let errDetail = `HTTP ${resp.status}`
         try { const e = await resp.json(); errDetail += ': ' + (e.detail || JSON.stringify(e)) } catch {}
-        messages.value[msgIdx].parts.push({ type: 'text', content: `Server error: ${errDetail}`, streaming: false })
+        messages.value[msgIdx].parts.push({ type: 'text', content: `Ошибка сервера: ${errDetail}`, streaming: false })
         isStreaming.value = false
         return
       }
 
       if (!resp.body) {
-        messages.value[msgIdx].parts.push({ type: 'text', content: 'Error: response body is null (browser may not support streaming).', streaming: false })
+        messages.value[msgIdx].parts.push({ type: 'text', content: 'Ошибка: тело ответа пустое (браузер может не поддерживать streaming).', streaming: false })
         isStreaming.value = false
         return
       }
@@ -166,14 +144,14 @@ export function useChat(settings) {
 
           } else if (evt.type === 'error') {
             flushText()
-            messages.value[msgIdx].parts.push({ type: 'text', content: `Error: ${evt.message}`, streaming: false })
+            messages.value[msgIdx].parts.push({ type: 'text', content: `Ошибка: ${evt.message}`, streaming: false })
             break outer
           }
         }
       }
       flushText()
       if (messages.value[msgIdx].parts.length === 0) {
-        messages.value[msgIdx].parts.push({ type: 'text', content: 'No response received from backend.', streaming: false })
+        messages.value[msgIdx].parts.push({ type: 'text', content: 'Ответ от сервера не получен.', streaming: false })
       }
 
       if (fullText.trim()) {
@@ -181,12 +159,12 @@ export function useChat(settings) {
       } else if (messages.value[msgIdx].parts.some(p => p.type === 'tool')) {
         const summary = messages.value[msgIdx].parts
           .filter(p => p.type === 'tool')
-          .map(p => `[Used ${p.tool} on "${p.input}"]`).join(' ')
+          .map(p => `[Использован ${p.tool} для "${p.input}"]`).join(' ')
         chatHistory.value.push({ role: 'assistant', content: summary })
       }
 
     } catch (err) {
-      messages.value[msgIdx].parts.push({ type: 'text', content: `Connection error: ${err.message}`, streaming: false })
+      messages.value[msgIdx].parts.push({ type: 'text', content: `Ошибка соединения: ${err.message}`, streaming: false })
     }
 
     isStreaming.value = false

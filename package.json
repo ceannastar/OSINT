@@ -1,6 +1,7 @@
 {
   "name": "openosint-vue",
   "version": "2.11.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -11,11 +12,10 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.0",
-    "@vue/tsconfig": "^0.9.1",
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
-    "vite": "^6.4.3"
+    "vite": "^5.0.0"
   }
 }

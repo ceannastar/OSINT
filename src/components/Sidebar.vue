@@ -3,7 +3,11 @@
     <!-- Логотип -->
     <div class="sidebar-header">
       <div class="logo-wrapper">
-        <div class="logo-icon c-float">⬡</div>
+        <svg class="logo-icon c-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
         <div>
           <span class="logo-text gradient-text">BFElite</span>
           <span class="logo-sub">OSINT инструмент</span>
@@ -12,12 +16,43 @@
     </div>
 
     <!-- Статус -->
-    <div class="status-section">
+    <div class="status-section" :class="{ 
+      'status-connected': ollamaTestOk, 
+      'status-error': ollamaTestResult && !ollamaTestOk && ollamaTestResult !== 'Проверка...',
+      'status-testing': ollamaTestResult === 'Проверка...'
+    }">
       <div class="status-item">
-        <span class="status-dot" :class="{ connected: aiBackend === 'ollama' }"></span>
-        <span class="status-label">Модель: </span>
-        <span class="status-value" v-if="aiBackend === 'ollama'">{{ settings.ollamaModel }}</span>
-        <span class="status-value" v-else>Offline</span>
+        <span class="status-dot" :class="{ 
+          connected: ollamaTestOk,
+          testing: ollamaTestResult === 'Проверка...',
+          error: ollamaTestResult && !ollamaTestOk && ollamaTestResult !== 'Проверка...'
+        }"></span>
+        <span class="status-label">Модель:</span>
+        <span class="status-value" v-if="ollamaTestOk">{{ settings.ollamaModel }}</span>
+        <span class="status-value status-offline" v-else-if="ollamaTestResult === 'Проверка...'">Проверка...</span>
+        <span class="status-value status-offline" v-else>Недоступна</span>
+      </div>
+      <div v-if="ollamaTestResult && ollamaTestResult !== 'Проверка...'" class="status-message" :class="ollamaTestOk ? 'text-accent' : 'text-error'">
+        <template v-if="ollamaTestOk">
+          <svg class="status-icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+          Подключено
+        </template>
+        <template v-else>
+          <svg class="status-icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          {{ ollamaTestResult }}
+        </template>
+      </div>
+      <div v-else-if="!ollamaTestResult" class="status-message text-muted">
+        <svg class="status-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 9v4M12 17h.01"/>
+          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+        </svg>
+        Нажмите «Проверить» в настройках
       </div>
     </div>
 
@@ -32,7 +67,7 @@
       <button class="action-btn glass-card" @click="$emit('open-settings')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
         </svg>
         Настройки
       </button>
@@ -43,14 +78,8 @@
     <!-- Информация о сессии -->
     <div class="session-info">
       <div class="info-item">
-        <span class="info-label">Количество сообщений</span>
+        <span class="info-label">Сообщений</span>
         <span class="info-value">{{ messagesCount }}</span>
-      </div>
-      <div class="info-item">
-        <span class="info-label">Статус модели</span>
-        <span class="info-value" :class="{ active: aiBackend === 'ollama' }">
-          {{ aiBackend === 'ollama' ? 'Active' : 'Idle' }}
-        </span>
       </div>
     </div>
 
@@ -58,7 +87,7 @@
 
     <!-- Нижняя часть -->
     <div class="sidebar-footer">
-      <button class="theme-toggle glass-card" @click="$emit('toggle-theme')" :title="isLight ? 'Dark mode' : 'Light mode'">
+      <button class="theme-toggle glass-card" @click="$emit('toggle-theme')" :title="isLight ? 'Тёмная тема' : 'Светлая тема'">
         <svg v-if="!isLight" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="5"/>
           <line x1="12" y1="1" x2="12" y2="3"/>
@@ -90,7 +119,9 @@ defineProps({
   aiBackend: { type: String, required: true },
   settings: { type: Object, required: true },
   isLight: { type: Boolean, required: true },
-  messagesCount: { type: Number, required: true }
+  messagesCount: { type: Number, required: true },
+  ollamaTestResult: { type: String, required: true },
+  ollamaTestOk: { type: Boolean, required: true }
 })
 
 defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-conversation'])
@@ -126,8 +157,10 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
 }
 
 .logo-icon {
-  font-size: 1.5rem;
-  color: var(--accent-primary);
+  width: 28px;
+  height: 28px;
+  stroke: var(--accent-primary);
+  flex-shrink: 0;
 }
 
 .logo-text {
@@ -147,12 +180,29 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
   margin-top: -2px;
 }
 
+/* Статус секция */
 .status-section {
   background: var(--bg-secondary);
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   margin-bottom: 1rem;
   border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.status-section.status-connected {
+  border-color: var(--accent-primary);
+  background: rgba(0, 255, 200, 0.05);
+}
+
+.status-section.status-error {
+  border-color: var(--red);
+  background: rgba(248, 81, 73, 0.05);
+}
+
+.status-section.status-testing {
+  border-color: var(--accent-blue);
+  background: rgba(59, 130, 246, 0.05);
 }
 
 .status-item {
@@ -163,17 +213,29 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
 }
 
 .status-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--text-muted);
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .status-dot.connected {
   background: var(--accent-primary);
-  box-shadow: 0 0 10px rgba(0, 255, 200, 0.4);
+  box-shadow: 0 0 12px rgba(0, 255, 200, 0.5);
   animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.status-dot.testing {
+  background: var(--accent-blue);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+.status-dot.error {
+  background: var(--red);
+  box-shadow: 0 0 12px rgba(248, 81, 73, 0.5);
 }
 
 .status-label {
@@ -186,6 +248,53 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
   margin-left: auto;
 }
 
+.status-value.status-offline {
+  color: var(--text-muted);
+}
+
+.status-message {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.status-icon-check,
+.status-icon-cross,
+.status-icon-warning {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.status-icon-check {
+  stroke: var(--accent-primary);
+}
+
+.status-icon-cross {
+  stroke: var(--red);
+}
+
+.status-icon-warning {
+  stroke: var(--yellow);
+}
+
+.text-accent {
+  color: var(--accent-primary);
+}
+
+.text-error {
+  color: var(--red);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Быстрые действия */
 .quick-actions {
   display: flex;
   flex-direction: column;
@@ -220,6 +329,7 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
   margin: 0.75rem 0;
 }
 
+/* Информация о сессии */
 .session-info {
   display: flex;
   flex-direction: column;
@@ -238,6 +348,9 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
 }
 
 .info-value {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   color: var(--text-secondary);
   font-weight: 500;
 }
@@ -246,6 +359,19 @@ defineEmits(['toggle-theme', 'open-settings', 'clear-conversation', 'new-convers
   color: var(--accent-primary);
 }
 
+.status-online-dot {
+  width: 12px;
+  height: 12px;
+  color: var(--accent-primary);
+}
+
+.status-offline-dot {
+  width: 12px;
+  height: 12px;
+  stroke: var(--red);
+}
+
+/* Нижняя часть */
 .sidebar-footer {
   margin-top: auto;
   display: flex;

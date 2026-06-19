@@ -9,7 +9,7 @@
           ref="textareaRef"
           v-model="model"
           :disabled="isStreaming"
-          placeholder="Enter your query..."
+          placeholder="Введите любой запрос или попросите помощи."
           rows="1"
           class="input-textarea"
           @keydown.enter.exact.prevent="$emit('send')"

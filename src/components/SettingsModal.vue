@@ -12,7 +12,10 @@
         <!-- Заголовок -->
         <div class="settings-header">
           <div class="settings-header-left">
-            <div class="settings-icon">⚙</div>
+            <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
             <div>
               <h2 class="settings-title">Настройки</h2>
               <p class="settings-subtitle">Управление интеллектуальным движком</p>
@@ -38,7 +41,7 @@
             class="settings-tab"
             :class="{ active: activeTab === tab.id }"
           >
-            <span class="tab-icon">{{ tab.icon }}</span>
+            <span class="tab-icon" v-html="tab.icon"></span>
             <span class="tab-label">{{ tab.label }}</span>
             <span v-if="tab.badge" class="tab-badge">{{ tab.badge }}</span>
           </button>
@@ -69,13 +72,24 @@
                     Проверка подключения...
                   </template>
                   <template v-else-if="ollamaTestOk">
-                    ✅ Подключено к Ollama
+                    <svg class="status-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                    Подключено к Ollama
                   </template>
                   <template v-else-if="ollamaTestResult">
-                    ❌ {{ ollamaTestResult }}
+                    <svg class="status-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"/>
+                      <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    {{ ollamaTestResult }}
                   </template>
                   <template v-else>
-                    ⚡ Нажмите «Проверить подключение»
+                    <svg class="status-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 9v4M12 17h.01"/>
+                      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                    </svg>
+                    Нажмите «Проверить подключение»
                   </template>
                 </span>
                 <span v-if="ollamaTestResult && ollamaTestResult !== 'Проверка...'" 
@@ -90,7 +104,10 @@
               <div class="form-group">
                 <label class="form-label">Название модели</label>
                 <div class="input-wrapper glass-card">
-                  <span class="input-icon">🧠</span>
+                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
                   <input
                     v-model="settings.ollamaModel"
                     placeholder="llama3.2"
@@ -103,7 +120,11 @@
               <div class="form-group">
                 <label class="form-label">Адрес сервера</label>
                 <div class="input-wrapper glass-card">
-                  <span class="input-icon">🌐</span>
+                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                  </svg>
                   <input
                     v-model="settings.ollamaHost"
                     placeholder="http://localhost:11434"
@@ -153,7 +174,12 @@
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Статус</span>
-                  <span class="detail-value status-online">● Онлайн</span>
+                  <span class="detail-value status-online">
+                    <svg class="online-dot" viewBox="0 0 24 24" fill="currentColor">
+                      <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Онлайн
+                  </span>
                 </div>
               </div>
             </div>
@@ -173,13 +199,27 @@
                 class="api-key-item"
               >
                 <div class="api-key-header">
-                  <span class="api-key-label">{{ k.label }}</span>
-                  <span class="api-key-status" :class="{ filled: setupData[k.key] }">
-                    {{ setupData[k.key] ? '● Настроен' : '○ Пусто' }}
-                  </span>
-                </div>
+                <span class="api-key-label">{{ k.label }}</span>
+                <span class="api-key-status" :class="{ filled: setupData[k.key] }">
+                  <template v-if="setupData[k.key]">
+                    <svg class="status-filled" viewBox="0 0 24 24" fill="currentColor">
+                      <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Настроен
+                  </template>
+                  <template v-else>
+                    <svg class="status-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Пусто
+                  </template>
+                </span>
+              </div>
                 <div class="input-wrapper glass-card">
-                  <span class="input-icon">🔑</span>
+                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
                   <input
                     :type="showKeys[k.key] ? 'text' : 'password'"
                     v-model="setupData[k.key]"
@@ -238,34 +278,43 @@
                 rel="noopener sponsored"
                 class="integration-card glass-card"
               >
-                <div class="integration-icon">🔗</div>
+                <svg class="integration-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
                 <div class="integration-info">
                   <span class="integration-name">{{ s.name }}</span>
                   <span class="integration-tagline">{{ s.tagline }}</span>
                 </div>
-                <span class="integration-arrow">→</span>
+                <span class="integration-arrow">-></span>
               </a>
             </div>
 
             <div v-else class="empty-integrations">
-              <span class="empty-icon">🔮</span>
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
               <p class="empty-text">Нет доступных интеграций</p>
             </div>
           </div>
 
-          <!-- Вкладка: О программе -->
           <div v-if="activeTab === 'about'" class="settings-panel">
             <div class="panel-header">
-              <h3 class="panel-title">О программе</h3>
-              <p class="panel-desc">Платформа Nexus Intelligence</p>
+              <h3 class="panel-title">Об инструменте</h3>
+              <p class="panel-desc">BFElite</p>
             </div>
 
             <div class="about-content">
               <div class="about-logo">
-                <span class="about-icon">⬡</span>
+                <svg class="about-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
                 <div>
-                  <span class="about-name gradient-text">Nexus</span>
-                  <span class="about-version">v{{ version }}</span>
+                  <span class="about-name gradient-text">BFElite</span>
                 </div>
               </div>
 
@@ -273,7 +322,19 @@
                 <div class="about-item">
                   <span class="about-label">Статус</span>
                   <span class="about-value" :class="{ active: ollamaTestOk }">
-                    {{ ollamaTestOk ? '🟢 Онлайн' : '🔴 Офлайн' }}
+                    <template v-if="ollamaTestOk">
+                      <svg class="status-online-dot" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                      </svg>
+                      Онлайн
+                    </template>
+                    <template v-else>
+                      <svg class="status-offline-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                      </svg>
+                      Офлайн
+                    </template>
                   </span>
                 </div>
                 <div class="about-item">
@@ -327,8 +388,7 @@ const props = defineProps({
   showAdvancedKeys: { type: Boolean, required: true },
   ollamaTestResult: { type: String, required: true },
   ollamaTestOk: { type: Boolean, required: true },
-  featuredSponsors: { type: Array, required: true },
-  version: { type: String, required: true }
+  featuredSponsors: { type: Array, required: true }
 })
 
 const emit = defineEmits([
@@ -344,10 +404,26 @@ const activeTab = ref('model')
 const isTesting = ref(false)
 
 const tabs = [
-  { id: 'model', icon: '🧠', label: 'Модель' },
-  { id: 'api', icon: '🔑', label: 'API Ключи' },
-  { id: 'integrations', icon: '🔗', label: 'Интеграции' },
-  { id: 'about', icon: 'ℹ️', label: 'О программе' }
+  { 
+    id: 'model', 
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>', 
+    label: 'Модель' 
+  },
+  { 
+    id: 'api', 
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>', 
+    label: 'API Ключи' 
+  },
+  { 
+    id: 'integrations', 
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>', 
+    label: 'Интеграции' 
+  },
+  { 
+    id: 'about', 
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>', 
+    label: 'Об инструменте' 
+  }
 ]
 
 const configuredKeys = computed(() => {
@@ -400,8 +476,11 @@ const handleSaveSettings = async () => {
 }
 
 .settings-icon {
-  font-size: 1.25rem;
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-secondary);
   opacity: 0.6;
+  flex-shrink: 0;
 }
 
 .settings-title {
@@ -486,7 +565,17 @@ const handleSaveSettings = async () => {
 }
 
 .tab-icon {
-  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.tab-icon :deep(svg) {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
 }
 
 .tab-label {
@@ -566,6 +655,7 @@ const handleSaveSettings = async () => {
   border-radius: 50%;
   background: var(--text-muted);
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .status-dot.connected {
@@ -588,6 +678,29 @@ const handleSaveSettings = async () => {
 .status-text {
   font-size: 0.75rem;
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-check,
+.status-cross,
+.status-warning {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.status-check {
+  stroke: var(--accent-primary);
+}
+
+.status-cross {
+  stroke: var(--red);
+}
+
+.status-warning {
+  stroke: var(--yellow);
 }
 
 .status-result {
@@ -634,8 +747,11 @@ const handleSaveSettings = async () => {
 }
 
 .input-icon {
-  font-size: 0.8rem;
+  width: 16px;
+  height: 16px;
+  stroke: var(--text-muted);
   opacity: 0.4;
+  flex-shrink: 0;
 }
 
 .form-input {
@@ -695,9 +811,18 @@ const handleSaveSettings = async () => {
 .detail-value {
   color: var(--text-secondary);
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .detail-value.status-online {
+  color: var(--accent-primary);
+}
+
+.online-dot {
+  width: 10px;
+  height: 10px;
   color: var(--accent-primary);
 }
 
@@ -774,6 +899,9 @@ const handleSaveSettings = async () => {
 }
 
 .api-key-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.6rem;
   color: var(--text-muted);
   font-weight: 500;
@@ -781,6 +909,20 @@ const handleSaveSettings = async () => {
 
 .api-key-status.filled {
   color: var(--accent-primary);
+}
+
+.status-filled,
+.status-empty {
+  width: 10px;
+  height: 10px;
+}
+
+.status-filled {
+  color: var(--accent-primary);
+}
+
+.status-empty {
+  stroke: var(--text-muted);
 }
 
 /* Integrations */
@@ -808,8 +950,11 @@ const handleSaveSettings = async () => {
 }
 
 .integration-icon {
-  font-size: 1rem;
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-muted);
   opacity: 0.4;
+  flex-shrink: 0;
 }
 
 .integration-info {
@@ -846,10 +991,12 @@ const handleSaveSettings = async () => {
 }
 
 .empty-icon {
-  font-size: 2rem;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 0.5rem;
+  stroke: var(--text-muted);
   opacity: 0.3;
   display: block;
-  margin-bottom: 0.5rem;
 }
 
 .empty-text {
@@ -875,20 +1022,15 @@ const handleSaveSettings = async () => {
 }
 
 .about-icon {
-  font-size: 1.5rem;
-  color: var(--accent-primary);
+  width: 32px;
+  height: 32px;
+  stroke: var(--accent-primary);
+  flex-shrink: 0;
 }
 
 .about-name {
   font-size: 1.1rem;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.about-version {
-  display: block;
-  font-size: 0.65rem;
-  color: var(--text-muted);
   font-family: 'JetBrains Mono', monospace;
 }
 
@@ -920,10 +1062,28 @@ const handleSaveSettings = async () => {
   color: var(--text-secondary);
   font-weight: 500;
   word-break: break-all;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .about-value.active {
   color: var(--accent-primary);
+}
+
+.status-online-dot,
+.status-offline-dot {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.status-online-dot {
+  color: var(--accent-primary);
+}
+
+.status-offline-dot {
+  stroke: var(--red);
 }
 
 .about-footer {

@@ -17,7 +17,8 @@ defineProps({
 defineEmits(['click'])
 </script>
 
-<style scoped>
+<style>
+/* Убираем scoped, чтобы v-html работал корректно */
 .suggestion-btn {
   display: inline-flex;
   align-items: center;
@@ -72,7 +73,7 @@ defineEmits(['click'])
   opacity: 0.8;
 }
 
-.suggestion-icon :deep(svg) {
+.suggestion-icon svg {
   width: 14px;
   height: 14px;
   stroke: currentColor;
