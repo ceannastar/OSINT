@@ -2,7 +2,7 @@ import uvicorn
 from app import create_app
 
 
-def run_server(host: str = "0.0.0.0", port: int = 8080) -> None:
+def run_server(host: str = "0.0.0.0", port: int = 5050) -> None:
     app = create_app()
     print(f"[*] BFElite OSINT инструмент")
     print(f"[*] Server -> http://{host}:{port}/")

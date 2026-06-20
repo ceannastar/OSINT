@@ -1,0 +1,80 @@
+{
+  "id": "86aa9251",
+  "name": "Чат 86aa9251",
+  "created_at": "2026-06-20T05:29:37.004828",
+  "updated_at": "2026-06-20T06:45:56.442039",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Привет!",
+      "timestamp": "2026-06-20T05:29:37.005537",
+      "parts": []
+    },
+    {
+      "role": "assistant",
+      "content": "Привет! Как дела?",
+      "timestamp": "2026-06-20T05:29:41.147234",
+      "parts": [
+        {
+          "type": "text",
+          "content": "Привет! Как дела?",
+          "streaming": false
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": "Нужно найти человвека",
+      "timestamp": "2026-06-20T06:39:51.535934",
+      "parts": []
+    },
+    {
+      "role": "assistant",
+      "content": "Вы ищете человека?\n\nПопробуйте сформулировать запрос более конкретно. Какой человек вы ищете? Имеется в виду:\n\n* Дружба?\n* Работа?\n* Любовь?\n* Другое?\n\nЯ постараюсь помочь вам найти нужного человека!",
+      "timestamp": "2026-06-20T06:40:39.737492",
+      "parts": [
+        {
+          "type": "text",
+          "content": "Вы ищете человека?\n\nПопробуйте сформулировать запрос более конкретно. Какой человек вы ищете? Имеется в виду:\n\n* Дружба?\n* Работа?\n* Любовь?\n* Другое?\n\nЯ постараюсь помочь вам найти нужного человека!",
+          "streaming": false
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": "@ceannastar",
+      "timestamp": "2026-06-20T06:41:46.923439",
+      "parts": []
+    },
+    {
+      "role": "assistant",
+      "content": "## Results for user @ceannastar\n\nОшибка: sherlock не смог запуститься: Command '['sherlock', '--help']' timed out after 5 seconds",
+      "timestamp": "2026-06-20T06:41:52.513493",
+      "parts": [
+        {
+          "type": "text",
+          "content": "## Results for user @ceannastar\n\nОшибка: sherlock не смог запуститься: Command '['sherlock', '--help']' timed out after 5 seconds",
+          "streaming": false
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": "@ceann",
+      "timestamp": "2026-06-20T06:43:15.670982",
+      "parts": []
+    },
+    {
+      "role": "assistant",
+      "content": "## Results for user @ceann\n\nНайдено профилей 'ceann':\n\nhttps://anilist.co/user/ceann/\nhttps://bsky.app/profile/ceann.bsky.social\nhttps://forum.cfx.re/u/ceann/summary\nhttps://ceann.carrd.co/\nhttps://www.chess.com/member/ceann\nhttps://www.codecademy.com/profiles/ceann\nhttps://www.deviantart.com/ceann\nhttps://forums.digitalspy.com/profile/ceann\nhttps://discord.com\nhttps://disqus.com/ceann\nhttps://hub.docker.com/u/ceann/\nhttps://www.duolingo.com/profile/ceann\nhttps://flipboard.com/@ceann\nhttps://www.freelancer.com/u/ceann\nhttps://www.gaiaonline.com/profiles/ceann\nhttps://genius.com/artists/ceann\nhttps://genius.com/ceann\nhttps://www.github.com/ceann\nhttps://www.gumroad.com/ceann\nhttps://hubpages.com/@ceann\nhttps://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-username?username=ceann\nhttps://imgur.com/user/ceann\nhttps://ceann.itch.io/\nhttps://www.kaskus.co.id/@ceann\nhttps://kick.com/ceann\nhttps://www.kongregate.com/accounts/ceann\nhttps://forum.kvinneguiden.no\nhttps://www.linux.org.ru/people/ceann/profile\nhttps://medium.com/@ceann\nhttps://www.memrise.com/user/ceann/\nhttps://www.mixcloud.com/ceann/\nhttps://myanimelist.net/profile/ceann\nhttps://www.mydramalist.com/profile/ceann\nhttps://community.native-instruments.com/profile/ceann\nhttps://www.nitrotype.com/racer/ceann\nhttps://ourdjtalk.com/members?username=ceann\nhttps://pastebin.com/u/ceann\nhttps://www.periscope.tv/ceann/\nhttps://www.plurk.com/ceann\nhttps://pokemonshowdown.com/users/ceann\nhttps://ceann.rajce.idnes.cz/\nhttps://www.redbubble.com/people/ceann\nhttps://www.reverbnation.com/ceann\nhttps://scratch.mit.edu/users/ceann\nhttps://soundcloud.com/ceann\nhttps://robertsspaceindustries.com/citizens/ceann\nhttps://ceann.substack.com/\nhttps://www.tiktok.com/@ceann\nhttps://t.me/ceann\nhttps://tenor.com/users/ceann\nhttps://themeforest.net/user/ceann\nhttps://www.tradingview.com/u/ceann/\nhttps://vk.com/ceann\nhttps://account.venmo.com/u/ceann\nhttps://vimeo.com/ceann\nhttps://en.wikipedia.org/wiki/Special:CentralAuth/ceann?uselang=qqx\nhttps://ceann.wordpress.com/\nhttps://profiles.wordpress.org/ceann/\nhttps://www.geocaching.com/p/default.aspx?u=ceann\nhttps://www.jeuxvideo.com/profil/ceann\nhttps://mastodon.cloud/@ceann\nhttps://osu.ppy.sh/users/ceann\nhttps://www.pinterest.com/ceann/\nhttps://wowhead.com/user=ceann\n\nВсего нашлось: 64 платформ",
+      "timestamp": "2026-06-20T06:45:56.441809",
+      "parts": [
+        {
+          "type": "text",
+          "content": "## Results for user @ceann\n\nНайдено профилей 'ceann':\n\nhttps://anilist.co/user/ceann/\nhttps://bsky.app/profile/ceann.bsky.social\nhttps://forum.cfx.re/u/ceann/summary\nhttps://ceann.carrd.co/\nhttps://www.chess.com/member/ceann\nhttps://www.codecademy.com/profiles/ceann\nhttps://www.deviantart.com/ceann\nhttps://forums.digitalspy.com/profile/ceann\nhttps://discord.com\nhttps://disqus.com/ceann\nhttps://hub.docker.com/u/ceann/\nhttps://www.duolingo.com/profile/ceann\nhttps://flipboard.com/@ceann\nhttps://www.freelancer.com/u/ceann\nhttps://www.gaiaonline.com/profiles/ceann\nhttps://genius.com/artists/ceann\nhttps://genius.com/ceann\nhttps://www.github.com/ceann\nhttps://www.gumroad.com/ceann\nhttps://hubpages.com/@ceann\nhttps://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-username?username=ceann\nhttps://imgur.com/user/ceann\nhttps://ceann.itch.io/\nhttps://www.kaskus.co.id/@ceann\nhttps://kick.com/ceann\nhttps://www.kongregate.com/accounts/ceann\nhttps://forum.kvinneguiden.no\nhttps://www.linux.org.ru/people/ceann/profile\nhttps://medium.com/@ceann\nhttps://www.memrise.com/user/ceann/\nhttps://www.mixcloud.com/ceann/\nhttps://myanimelist.net/profile/ceann\nhttps://www.mydramalist.com/profile/ceann\nhttps://community.native-instruments.com/profile/ceann\nhttps://www.nitrotype.com/racer/ceann\nhttps://ourdjtalk.com/members?username=ceann\nhttps://pastebin.com/u/ceann\nhttps://www.periscope.tv/ceann/\nhttps://www.plurk.com/ceann\nhttps://pokemonshowdown.com/users/ceann\nhttps://ceann.rajce.idnes.cz/\nhttps://www.redbubble.com/people/ceann\nhttps://www.reverbnation.com/ceann\nhttps://scratch.mit.edu/users/ceann\nhttps://soundcloud.com/ceann\nhttps://robertsspaceindustries.com/citizens/ceann\nhttps://ceann.substack.com/\nhttps://www.tiktok.com/@ceann\nhttps://t.me/ceann\nhttps://tenor.com/users/ceann\nhttps://themeforest.net/user/ceann\nhttps://www.tradingview.com/u/ceann/\nhttps://vk.com/ceann\nhttps://account.venmo.com/u/ceann\nhttps://vimeo.com/ceann\nhttps://en.wikipedia.org/wiki/Special:CentralAuth/ceann?uselang=qqx\nhttps://ceann.wordpress.com/\nhttps://profiles.wordpress.org/ceann/\nhttps://www.geocaching.com/p/default.aspx?u=ceann\nhttps://www.jeuxvideo.com/profil/ceann\nhttps://mastodon.cloud/@ceann\nhttps://osu.ppy.sh/users/ceann\nhttps://www.pinterest.com/ceann/\nhttps://wowhead.com/user=ceann\n\nВсего нашлось: 64 платформ",
+          "streaming": false
+        }
+      ]
+    }
+  ]
+}
